@@ -1,7 +1,7 @@
 // Memoryオブジェクトの確認用
 var DumpTool = function(memory) {
   // テーブルの行数
-  this.rows = Math.ceil(memory.getCapacity() / 16);
+  this.rows = Math.ceil(memory.get_capacity() / 16);
   // メモリのデータを格納するテーブル
   this.table = new Array(this.rows);
   for ( var i = 0; i < this.rows; ++ i ) {
@@ -16,13 +16,13 @@ var DumpTool = function(memory) {
 
 DumpTool.prototype = {
   // 文字列を取得
-  getTableAsText: function() {
+  get_table_as_text: function() {
     var text = "";
 
     // ヘッダー
     text += "       ";
     for ( var col = 0; col < 16; ++ col ) {
-      text += " " + Utils.getZeroFilledText(Utils.getHexText(col), 2);
+      text += " " + Utils.get_zero_filled_text(Utils.get_hex_text(col), 2);
     }
     text += "\n";
 
@@ -38,12 +38,12 @@ DumpTool.prototype = {
     // ダンプ部分
     for ( var row = 0; row < this.rows; ++ row ) {
       // xxx0
-      var row_number = Utils.getHexText(row * 16);
-      text += Utils.getZeroFilledText(row_number, 4) + " | ";
+      var row_number = Utils.get_hex_text(row * 16);
+      text += Utils.get_zero_filled_text(row_number, 4) + " | ";
       for ( var col = 0; col < 16; ++ col ) {
         // 16進数に変換しておく
-        var cell = Utils.getHexText(this.table[row][col]);
-        text += " " + Utils.getZeroFilledText(cell, 2);
+        var cell = Utils.get_hex_text(this.table[row][col]);
+        text += " " + Utils.get_zero_filled_text(cell, 2);
       }
       text += "\n";
     }

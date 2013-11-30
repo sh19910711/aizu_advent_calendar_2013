@@ -53,7 +53,7 @@
         // ダンプ結果を更新する
         function update_dump() {
           var dump_tool = new DumpTool(mem);
-          mem_dump.text(dump_tool.getTableAsText());
+          mem_dump.text(dump_tool.get_table_as_text());
           log("ダンプ結果を更新しました");
         }
 
