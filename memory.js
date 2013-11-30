@@ -18,13 +18,13 @@ Memory.prototype = {
 
   // 8ビット書き込み
   write_8bit: function(address, data) {
-    this.is_valid_address(address);
+    this.check_address(address);
     this.data[address] = data & 0xFF;
   },
 
   // 8ビット読み込み
   read_8bit: function(address) {
-    this.is_valid_address(address);
+    this.check_address(address);
     return this.data[address] & 0xFF;
   }
 };

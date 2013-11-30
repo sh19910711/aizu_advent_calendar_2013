@@ -12,6 +12,13 @@ var DumpTool = function(memory) {
       this.table[row][col] = "0";
     }
   }
+  // メモリ内のデータをテーブルに移動させる
+  for ( var row = 0; row < this.rows; ++ row ) {
+    for ( var col = 0; col < 16; ++ col ) {
+      var address = row * 16 + col;
+      this.table[row][col] = memory.read_8bit(address);
+    }
+  }
 };
 
 DumpTool.prototype = {

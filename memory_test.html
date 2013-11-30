@@ -32,6 +32,18 @@
       <h2>システムメッセージ</h2>
       <textarea id="system_message" class="small"></textarea>
 
+      <h2>メモリの操作</h2>
+      <!-- 書き込み -->
+      <p>
+        <input id="write_memory_address" type="text" placeholder="アドレス（16進数4桁）">
+        <input id="write_memory_data" type="text" placeholder="数値データ(16進数2桁)">
+        <button id="write_memory">書き込む</button>
+      </p>
+      <!-- 初期化 -->
+      <p>
+        <button id="clear_memory">メモリを初期化する</button>
+      </p>
+
       <script>
         //
         // グローバル変数
@@ -57,17 +69,54 @@
           log("ダンプ結果を更新しました");
         }
 
+        // ログを出力する
         function log(message) {
           var now = new Date();
           var time_text = now.getTime();
-          var text = "[" + time_text + "] " + message;
+          var text = "[" + time_text + "] " + message + "\n";
           system_message.append(text);
         }
+
+        // メモリに書き込む
+        function write_memory() {
+          // 入力の取得
+          var address = $("input#write_memory_address").val();
+          var data = $("input#write_memory_data").val();
+          // 書き込み
+          try {
+            mem.write_8bit(parseInt(address, 16), parseInt(data, 16));
+            log("書き込みました：アドレス=" + address + ", データ=" + data);
+            // ダンプを更新
+            update_dump();
+          } catch(e) {
+            // エラー
+            log(e);
+          }
+        }
+
+        // 0で初期化する
+        function clear_memory() {
+          // 書き込み
+          for ( var i = 0; i < mem_size; ++ i )
+            mem.write_8bit(i, 0);
+          log("メモリを初期化しました");
+          // ダンプを更新
+          update_dump();
+        }
+
+        //
+        // イベント
+        //
+        $(document).on("click", "button#write_memory", write_memory);
+        $(document).on("click", "button#clear_memory", clear_memory);
 
         //
         // エントリポイント
         //
         $(function() {
+          // 試し書き
+          for ( var i = 0; i < 16 * 3; ++ i )
+            mem.write_8bit(i, i);
           update_dump();
         });
       </script>
