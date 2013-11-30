@@ -18,17 +18,28 @@ DumpTool.prototype = {
   // 文字列を取得
   getTableAsText: function() {
     var text = "";
+
     // ヘッダー
+    text += "       ";
     for ( var col = 0; col < 16; ++ col ) {
       text += " " + Utils.getZeroFilledText(Utils.getHexText(col), 2);
     }
     text += "\n";
+
+    // 分割線
+    for ( var col = 0; col < 7; ++ col ) {
+      text += "-";
+    }
     for ( var col = 0; col < 16; ++ col ) {
       text += "---";
     }
     text += "\n";
+
     // ダンプ部分
     for ( var row = 0; row < this.rows; ++ row ) {
+      // xxx0
+      var row_number = Utils.getHexText(row * 16);
+      text += Utils.getZeroFilledText(row_number, 4) + " | ";
       for ( var col = 0; col < 16; ++ col ) {
         // 16進数に変換しておく
         var cell = Utils.getHexText(this.table[row][col]);
@@ -36,6 +47,7 @@ DumpTool.prototype = {
       }
       text += "\n";
     }
+
     return text;
   }
 };

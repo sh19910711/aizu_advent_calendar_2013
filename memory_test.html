@@ -8,27 +8,69 @@
     <script src="./dump_tool.js"></script>
     <script src="./memory.js"></script>
     <style>
-      #mem_dump {
-        width: 640px;
+      textarea {
+        width: 100%;
+      }
+      textarea.large {
         height: 400px;
+      }
+      textarea.medium {
+        height: 200px;
+      }
+      textarea.small {
+        height: 128px;
       }
     </style>
   </head>
   <body>
-    <h1>Memory Test</h1>
-    <h2>メモリの内容を確認する</h2>
-    <textarea id="mem_dump"></textarea>
-    <script>
-      $(function() {
+    <div>
+      <h1>Memory Test</h1>
+
+      <h2>メモリの内容を確認する</h2>
+      <textarea id="mem_dump" class="large"></textarea>
+
+      <h2>システムメッセージ</h2>
+      <textarea id="system_message" class="small"></textarea>
+
+      <script>
+        //
+        // グローバル変数
+        //
+
         // メモリの定義
-        var mem_size = 1000;
+        // 容量: 64KB
+        var mem_size = 64 * 1024;
         var mem = new Memory(mem_size);
 
         // 確認用
         var mem_dump = $("#mem_dump");
-        var dump_tool = new DumpTool(mem);
-        mem_dump.text(dump_tool.getTableAsText());
-      });
-    </script>
+        var system_message = $("#system_message");
+
+        //
+        // 関数
+        //
+
+        // ダンプ結果を更新する
+        function update_dump() {
+          var dump_tool = new DumpTool(mem);
+          mem_dump.text(dump_tool.getTableAsText());
+          log("ダンプ結果を更新しました");
+        }
+
+        function log(message) {
+          var now = new Date();
+          var time_text = now.getTime();
+          var text = "[" + time_text + "] " + message;
+          system_message.append(text);
+        }
+
+        //
+        // エントリポイント
+        //
+        $(function() {
+          update_dump();
+        });
+      </script>
+    </div>
   </body>
 </html>
