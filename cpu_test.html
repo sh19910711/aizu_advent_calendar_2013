@@ -1,0 +1,81 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>CPU Test</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="./utils.js"></script>
+    <script src="./dump_tool.js"></script>
+    <script src="./memory.js"></script>
+    <script src="./cpu.js"></script>
+    <style>
+      textarea {
+        width: 100%;
+      }
+      textarea.large {
+        height: 400px;
+      }
+      textarea.medium {
+        height: 200px;
+      }
+      textarea.small {
+        height: 128px;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <h1>CPU Test</h1>
+
+      <h2>CPUの操作</h2>
+      <!-- TODO: コマンドの実行 -->
+
+      <h2>CPUの動作を確認する</h2>
+
+      <h3>レジスタ</h3>
+      <div>RA: <span id="register_ra">0000</span>, RB: <span id="register_rb">0000</span>, RC: <span id="register_rc">0000</span>, RD: <span id="register_rd">0000</span>, A: <span id="register_a">0000</span>, PC: <span id="register_pc">0000</span>, SP: <span id="register_sp">0000</span>, F: <span id="register_f">0000</span></div>
+
+      <h2>システムメッセージ</h2>
+      <textarea id="system_message" class="small"></textarea>
+
+      <script>
+        //
+        // グローバル変数
+        //
+
+        // メモリの定義
+        // 容量: 64KB
+        var mem_size = 64 * 1024;
+        var mem = new Memory(mem_size);
+
+        // 確認用
+        var system_message = $("#system_message");
+
+        //
+        // 関数
+        //
+
+        // ログを出力する
+        function log(message) {
+          var now = new Date();
+          var time_text = now.getTime();
+          var text = "[" + time_text + "] " + message + "\n";
+          system_message.append(text);
+        }
+
+        //
+        // イベント
+        //
+        // $(document).on("click", "button#write_memory", write_memory);
+
+        //
+        // エントリポイント
+        //
+        $(function() {
+          // TODO
+        });
+      </script>
+    </div>
+  </body>
+</html>
