@@ -115,10 +115,11 @@
             var address_hex = Utils.get_zero_filled_text(Utils.get_hex_text(address), 4);
             cpu.step();
             log("ステップ実行: アドレス: " + address_hex + ", オペコード = " + mem.read_8bit(address));
+            update_registers();
+            update_dump();
           } catch(e) {
             log(e);
           }
-          update_registers();
         }
 
         // 自動実行を開始
@@ -129,6 +130,8 @@
               var address = cpu.registers.PC - 1;
               var address_hex = Utils.get_zero_filled_text(Utils.get_hex_text(address), 4);
               log("自動実行: アドレス: " + address_hex + ", オペコード = " + mem.read_8bit(address));
+              update_registers();
+              update_dump();
             },
             // エラー発生時に呼ばれる関数
             function(error) {
