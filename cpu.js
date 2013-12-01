@@ -11,6 +11,7 @@ var Processor = function(clock_speed, memory) {
     F: 0
   };
   this.memory = memory;
+  this.timer = undefined;
 };
 
 Processor.prototype = {
@@ -41,6 +42,27 @@ Processor.prototype = {
     } else {
       throw new Error("E002: 未定義の命令");
     }
+  },
+
+  // 自動実行の開始
+  // success_calback: 処理が成功したときに呼ばれる関数
+  // error_callback: エラーが発生したときに呼ばれる関数
+  run_auto_start: function(success_calback, error_callback) {
+    var self = this;
+    // 500msごとに実行する
+    self.timer = setInterval(function() {
+      try {
+        self.step();
+        success_calback();
+      } catch(e) {
+        error_callback(e);
+      }
+    }, 500);
+  },
+
+  // 自動実行の停止
+  run_auto_stop: function() {
+    clearInterval(this.timer);
   },
 
   operations: {

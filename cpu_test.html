@@ -35,6 +35,10 @@
       <div>
         <button id="run_step">ステップ実行</button> <button id="init">CPUを初期化</button>
       </div>
+      <div>-</div>
+      <div>
+        <button id="run_auto_start">自動実行開始</button> <button id="run_auto_stop">自動実行停止</button>
+      </div>
 
       <h2>メモリの操作</h2>
       <div>
@@ -117,6 +121,29 @@
           update_registers();
         }
 
+        // 自動実行を開始
+        function run_auto_start() {
+          cpu.run_auto_start(
+            // 処理成功時に呼ばれる関数
+            function() {
+              var address = cpu.registers.PC - 1;
+              var address_hex = Utils.get_zero_filled_text(Utils.get_hex_text(address), 4);
+              log("自動実行: アドレス: " + address_hex + ", オペコード = " + mem.read_8bit(address));
+            },
+            // エラー発生時に呼ばれる関数
+            function(error) {
+              log(error);
+            }
+          );
+          log("自動実行を開始します");
+        }
+
+        // 自動実行を停止
+        function run_auto_stop() {
+          cpu.run_auto_stop();
+          log("自動実行を停止しました");
+        }
+
         // メモリに書き込む
         function write_memory() {
           // 入力の取得
@@ -134,11 +161,21 @@
           }
         }
 
+        // CPUを初期化する
+        function init_cpu() {
+          cpu.init();
+          log("CPUを初期化しました");
+          update_registers();
+        }
+
         //
         // イベント
         //
         $(document).on("click", "button#write_memory", write_memory);
         $(document).on("click", "button#run_step", run_step);
+        $(document).on("click", "button#init", init_cpu);
+        $(document).on("click", "button#run_auto_start", run_auto_start);
+        $(document).on("click", "button#run_auto_stop", run_auto_stop);
 
         //
         // エントリポイント
