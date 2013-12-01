@@ -22,6 +22,9 @@
       textarea.small {
         height: 128px;
       }
+      input[type="text"] {
+        width: 88px;
+      }
     </style>
   </head>
   <body>
@@ -36,7 +39,10 @@
       <h2>CPUの動作を確認する</h2>
 
       <h3>レジスタ</h3>
-      <div>RA: <span id="register_ra">-</span>, RB: <span id="register_rb">-</span>, RC: <span id="register_rc">-</span>, RD: <span id="register_rd">-</span>, A: <span id="register_a">-</span>, PC: <span id="register_pc">-</span>, SP: <span id="register_sp">-</span>, F: <span id="register_f">-</span></div>
+      <div>RA: <input type="text" id="register_ra">, RB: <input type="text" id="register_rb">, RC: <input type="text" id="register_rc">, RD: <input type="text" id="register_rd">, A: <input type="text" id="register_a">, PC: <input type="text" id="register_pc">, SP: <input type="text" id="register_sp">, F: <input type="text" id="register_f"></div>
+
+      <h2>メモリ</h2>
+      <textarea id="memory_dump" class="small"></textarea>
 
       <h2>システムメッセージ</h2>
       <textarea id="system_message" class="small"></textarea>
@@ -56,11 +62,19 @@
         var cpu = new Processor(cpu_clock_speed);
 
         // 確認用
+        var mem_dump = $("#mem_dump");
         var system_message = $("#system_message");
 
         //
         // 関数
         //
+
+        // ダンプ結果を更新する
+        function update_dump() {
+          var dump_tool = new DumpTool(mem);
+          mem_dump.text(dump_tool.get_table_as_text());
+          log("ダンプ結果を更新しました");
+        }
 
         // ログを出力する
         function log(message) {
@@ -71,14 +85,14 @@
         }
 
         function update_registers() {
-          $("#register_ra").text(Utils.get_zero_filled_text(cpu.registers.RA.toString(), 4));
-          $("#register_rb").text(Utils.get_zero_filled_text(cpu.registers.RB.toString(), 4));
-          $("#register_rc").text(Utils.get_zero_filled_text(cpu.registers.RC.toString(), 4));
-          $("#register_rd").text(Utils.get_zero_filled_text(cpu.registers.RD.toString(), 4));
-          $("#register_pc").text(Utils.get_zero_filled_text(cpu.registers.PC.toString(), 4));
-          $("#register_sp").text(Utils.get_zero_filled_text(cpu.registers.SP.toString(), 4));
-          $("#register_a").text(Utils.get_zero_filled_text(cpu.registers.A.toString(), 4));
-          $("#register_f").text(Utils.get_zero_filled_text(cpu.registers.F.toString(), 4));
+          $("#register_ra").val(Utils.get_zero_filled_text(cpu.registers.RA.toString(), 4));
+          $("#register_rb").val(Utils.get_zero_filled_text(cpu.registers.RB.toString(), 4));
+          $("#register_rc").val(Utils.get_zero_filled_text(cpu.registers.RC.toString(), 4));
+          $("#register_rd").val(Utils.get_zero_filled_text(cpu.registers.RD.toString(), 4));
+          $("#register_pc").val(Utils.get_zero_filled_text(cpu.registers.PC.toString(), 4));
+          $("#register_sp").val(Utils.get_zero_filled_text(cpu.registers.SP.toString(), 4));
+          $("#register_a").val(Utils.get_zero_filled_text(cpu.registers.A.toString(), 4));
+          $("#register_f").val(Utils.get_zero_filled_text(cpu.registers.F.toString(), 4));
         }
 
         //
@@ -94,6 +108,7 @@
           log("CPUを初期化しました");
           update_registers();
           log("レジスタ一覧を更新しました");
+          update_dump();
         });
       </script>
     </div>
