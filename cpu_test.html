@@ -22,7 +22,7 @@
       textarea.small {
         height: 128px;
       }
-      input[type="text"] {
+      input.register {
         width: 60px;
       }
     </style>
@@ -33,14 +33,21 @@
 
       <h2>CPUの操作</h2>
       <div>
-        <button id="run_step">ステップ実行</button><button id="init">CPUを初期化</button>
+        <button id="run_step">ステップ実行</button> <button id="init">CPUを初期化</button>
+      </div>
+
+      <h2>メモリの操作</h2>
+      <div>
+        <input id="write_memory_address" type="text" placeholder="アドレス（16進数4桁）">
+        <input id="write_memory_data" type="text" placeholder="数値データ(16進数2桁)">
+        <button id="write_memory">書き込む</button>
       </div>
 
       <h2>CPUの動作を確認する</h2>
 
       <h3>レジスタ</h3>
-      <div>RA: <input type="text" id="register_ra">, RB: <input type="text" id="register_rb">, RC: <input type="text" id="register_rc">, RD: <input type="text" id="register_rd"></div>
-      <div>A: <input type="text" id="register_a">, PC: <input type="text" id="register_pc">, SP: <input type="text" id="register_sp">, F: <input type="text" id="register_f"></div>
+      <div>RA: <input class="register"  type="text" id="register_ra">, RB: <input class="register"  type="text" id="register_rb">, RC: <input class="register"  type="text" id="register_rc">, RD: <input class="register"  type="text" id="register_rd"></div>
+      <div>A: <input class="register"  type="text" id="register_a">, PC: <input class="register"  type="text" id="register_pc">, SP: <input class="register"  type="text" id="register_sp">, F: <input class="register"  type="text" id="register_f"></div>
 
       <h2>メモリ</h2>
       <textarea id="mem_dump" class="small"></textarea>
@@ -85,6 +92,7 @@
           system_message.prepend(text);
         }
 
+        // レジスタ一覧を更新する
         function update_registers() {
           $("#register_ra").val(Utils.get_zero_filled_text(cpu.registers.RA.toString(), 4));
           $("#register_rb").val(Utils.get_zero_filled_text(cpu.registers.RB.toString(), 4));
@@ -96,14 +104,38 @@
           $("#register_f").val(Utils.get_zero_filled_text(cpu.registers.F.toString(), 4));
         }
 
+        // ステップ実行
         function run_step() {
-          cpu.step();
+          try {
+            cpu.step();
+            log("ステップ実行: オペコード = " + mem.read_8bit(cpu.registers.PC));
+          } catch(e) {
+            log(e);
+          }
           update_registers();
+        }
+
+        // メモリに書き込む
+        function write_memory() {
+          // 入力の取得
+          var address = $("input#write_memory_address").val();
+          var data = $("input#write_memory_data").val();
+          // 書き込み
+          try {
+            mem.write_8bit(parseInt(address, 16), parseInt(data, 16));
+            log("書き込みました：アドレス=" + address + ", データ=" + data);
+            // ダンプを更新
+            update_dump();
+          } catch(e) {
+            // エラー
+            log(e);
+          }
         }
 
         //
         // イベント
         //
+        $(document).on("click", "button#write_memory", write_memory);
         $(document).on("click", "button#run_step", run_step);
 
         //

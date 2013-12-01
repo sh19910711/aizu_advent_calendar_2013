@@ -31,7 +31,22 @@ Processor.prototype = {
     // オペコードを取得する
     var opcode = this.memory.read_8bit(this.registers.PC);
     this.registers.PC += 1;
-    console.log(opcode);
+
+    // 対応する処理を取得する
+    var run_operation = this.operations[opcode];
+
+    // 処理の実行
+    if ( run_operation instanceof Function ) {
+      run_operation();
+    } else {
+      throw new Error("E002: 未定義の命令");
+    }
+  },
+
+  operations: {
+    // no operation: 何もしない
+    0x00: function() {
+    }
   }
 };
 
