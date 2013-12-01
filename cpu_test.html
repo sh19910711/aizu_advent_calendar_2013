@@ -23,7 +23,7 @@
         height: 128px;
       }
       input[type="text"] {
-        width: 88px;
+        width: 60px;
       }
     </style>
   </head>
@@ -33,16 +33,17 @@
 
       <h2>CPUの操作</h2>
       <div>
-        <button>ステップ実行</button><button>初期化</button>
+        <button id="run_step">ステップ実行</button><button id="init">CPUを初期化</button>
       </div>
 
       <h2>CPUの動作を確認する</h2>
 
       <h3>レジスタ</h3>
-      <div>RA: <input type="text" id="register_ra">, RB: <input type="text" id="register_rb">, RC: <input type="text" id="register_rc">, RD: <input type="text" id="register_rd">, A: <input type="text" id="register_a">, PC: <input type="text" id="register_pc">, SP: <input type="text" id="register_sp">, F: <input type="text" id="register_f"></div>
+      <div>RA: <input type="text" id="register_ra">, RB: <input type="text" id="register_rb">, RC: <input type="text" id="register_rc">, RD: <input type="text" id="register_rd"></div>
+      <div>A: <input type="text" id="register_a">, PC: <input type="text" id="register_pc">, SP: <input type="text" id="register_sp">, F: <input type="text" id="register_f"></div>
 
       <h2>メモリ</h2>
-      <textarea id="memory_dump" class="small"></textarea>
+      <textarea id="mem_dump" class="small"></textarea>
 
       <h2>システムメッセージ</h2>
       <textarea id="system_message" class="small"></textarea>
@@ -58,8 +59,8 @@
         var mem = new Memory(mem_size);
 
         // CPUの定義
-        var cpu_clock_speed = 1 * 1000 * 1000; // 1 MHz
-        var cpu = new Processor(cpu_clock_speed);
+        var cpu_clock_speed = 1 * 1000 * 1000; // 1 MHz（ダミー）
+        var cpu = new Processor(cpu_clock_speed, mem);
 
         // 確認用
         var mem_dump = $("#mem_dump");
@@ -95,10 +96,15 @@
           $("#register_f").val(Utils.get_zero_filled_text(cpu.registers.F.toString(), 4));
         }
 
+        function run_step() {
+          cpu.step();
+          update_registers();
+        }
+
         //
         // イベント
         //
-        // $(document).on("click", "button#write_memory", write_memory);
+        $(document).on("click", "button#run_step", run_step);
 
         //
         // エントリポイント

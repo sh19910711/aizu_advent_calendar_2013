@@ -1,5 +1,5 @@
 // CPU
-var Processor = function(clock_speed) {
+var Processor = function(clock_speed, memory) {
   this.registers = {
     RA: 0,
     RB: 0,
@@ -10,6 +10,7 @@ var Processor = function(clock_speed) {
     SP: 0,
     F: 0
   };
+  this.memory = memory;
 };
 
 Processor.prototype = {
@@ -23,6 +24,14 @@ Processor.prototype = {
     this.registers.PC = 0;
     this.registers.SP = 0;
     this.registers.F  = 0;
+  },
+
+  // ステップ実行
+  step: function() {
+    // オペコードを取得する
+    var opcode = this.memory.read_8bit(this.registers.PC);
+    this.registers.PC += 1;
+    console.log(opcode);
   }
 };
 
