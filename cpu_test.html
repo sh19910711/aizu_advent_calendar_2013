@@ -94,21 +94,23 @@
 
         // レジスタ一覧を更新する
         function update_registers() {
-          $("#register_ra").val(Utils.get_zero_filled_text(cpu.registers.RA.toString(), 4));
-          $("#register_rb").val(Utils.get_zero_filled_text(cpu.registers.RB.toString(), 4));
-          $("#register_rc").val(Utils.get_zero_filled_text(cpu.registers.RC.toString(), 4));
-          $("#register_rd").val(Utils.get_zero_filled_text(cpu.registers.RD.toString(), 4));
-          $("#register_pc").val(Utils.get_zero_filled_text(cpu.registers.PC.toString(), 4));
-          $("#register_sp").val(Utils.get_zero_filled_text(cpu.registers.SP.toString(), 4));
-          $("#register_a").val(Utils.get_zero_filled_text(cpu.registers.A.toString(), 4));
-          $("#register_f").val(Utils.get_zero_filled_text(cpu.registers.F.toString(), 4));
+          $("#register_ra").val(Utils.get_zero_filled_text(Utils.get_hex_text(cpu.registers.RA), 4));
+          $("#register_rb").val(Utils.get_zero_filled_text(Utils.get_hex_text(cpu.registers.RB), 4));
+          $("#register_rc").val(Utils.get_zero_filled_text(Utils.get_hex_text(cpu.registers.RC), 4));
+          $("#register_rd").val(Utils.get_zero_filled_text(Utils.get_hex_text(cpu.registers.RD), 4));
+          $("#register_pc").val(Utils.get_zero_filled_text(Utils.get_hex_text(cpu.registers.PC), 4));
+          $("#register_sp").val(Utils.get_zero_filled_text(Utils.get_hex_text(cpu.registers.SP), 4));
+          $("#register_a").val(Utils.get_zero_filled_text(Utils.get_hex_text(cpu.registers.A), 4));
+          $("#register_f").val(Utils.get_zero_filled_text(Utils.get_hex_text(cpu.registers.F), 4));
         }
 
         // ステップ実行
         function run_step() {
           try {
+            var address = cpu.registers.PC;
+            var address_hex = Utils.get_zero_filled_text(Utils.get_hex_text(address), 4);
             cpu.step();
-            log("ステップ実行: オペコード = " + mem.read_8bit(cpu.registers.PC));
+            log("ステップ実行: アドレス: " + address_hex + ", オペコード = " + mem.read_8bit(address));
           } catch(e) {
             log(e);
           }
