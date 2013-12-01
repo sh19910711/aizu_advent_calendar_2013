@@ -29,12 +29,14 @@
       <h1>CPU Test</h1>
 
       <h2>CPUの操作</h2>
-      <!-- TODO: コマンドの実行 -->
+      <div>
+        <button>ステップ実行</button><button>初期化</button>
+      </div>
 
       <h2>CPUの動作を確認する</h2>
 
       <h3>レジスタ</h3>
-      <div>RA: <span id="register_ra">0000</span>, RB: <span id="register_rb">0000</span>, RC: <span id="register_rc">0000</span>, RD: <span id="register_rd">0000</span>, A: <span id="register_a">0000</span>, PC: <span id="register_pc">0000</span>, SP: <span id="register_sp">0000</span>, F: <span id="register_f">0000</span></div>
+      <div>RA: <span id="register_ra">-</span>, RB: <span id="register_rb">-</span>, RC: <span id="register_rc">-</span>, RD: <span id="register_rd">-</span>, A: <span id="register_a">-</span>, PC: <span id="register_pc">-</span>, SP: <span id="register_sp">-</span>, F: <span id="register_f">-</span></div>
 
       <h2>システムメッセージ</h2>
       <textarea id="system_message" class="small"></textarea>
@@ -49,6 +51,10 @@
         var mem_size = 64 * 1024;
         var mem = new Memory(mem_size);
 
+        // CPUの定義
+        var cpu_clock_speed = 1 * 1000 * 1000; // 1 MHz
+        var cpu = new Processor(cpu_clock_speed);
+
         // 確認用
         var system_message = $("#system_message");
 
@@ -61,7 +67,18 @@
           var now = new Date();
           var time_text = now.getTime();
           var text = "[" + time_text + "] " + message + "\n";
-          system_message.append(text);
+          system_message.prepend(text);
+        }
+
+        function update_registers() {
+          $("#register_ra").text(Utils.get_zero_filled_text(cpu.registers.RA.toString(), 4));
+          $("#register_rb").text(Utils.get_zero_filled_text(cpu.registers.RB.toString(), 4));
+          $("#register_rc").text(Utils.get_zero_filled_text(cpu.registers.RC.toString(), 4));
+          $("#register_rd").text(Utils.get_zero_filled_text(cpu.registers.RD.toString(), 4));
+          $("#register_pc").text(Utils.get_zero_filled_text(cpu.registers.PC.toString(), 4));
+          $("#register_sp").text(Utils.get_zero_filled_text(cpu.registers.SP.toString(), 4));
+          $("#register_a").text(Utils.get_zero_filled_text(cpu.registers.A.toString(), 4));
+          $("#register_f").text(Utils.get_zero_filled_text(cpu.registers.F.toString(), 4));
         }
 
         //
@@ -73,7 +90,10 @@
         // エントリポイント
         //
         $(function() {
-          // TODO
+          cpu.init();
+          log("CPUを初期化しました");
+          update_registers();
+          log("レジスタ一覧を更新しました");
         });
       </script>
     </div>
